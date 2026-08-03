@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link
+    href="https://fonts.googleapis.com/css?family=DM+Sans:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Bricolage+Grotesque:200,300,regular,500,600,700,800"
+    rel="stylesheet" />
+  <title>Weather app</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+
+  <!-- Units -->
+  <header>
+    <div class="container">
+      <div class="nav">
+        <div class="title">
+          <img src="assets/images/logo.svg" alt="">
+        </div>
+        <div tabindex="0" class="units-container">
+          <img src="assets/images/icon-units.svg" alt="">
+          <span>Units</span>
+          <img src="assets/images/icon-dropdown.svg" alt="">
+
+          <div class="switch-container">
+            <p class="switched-name">Switch to Imperial</p>
+            <div class="temperature-container-in-switch">
+              <p class="names-of-units">temperature</p>
+              <div class="celcius-in-switch options-container">
+                <p>Celcius (°C)</p>
+                <img src="assets/images/icon-checkmark.svg" alt="">
+              </div>
+              <div class="fahrenheit-in-switch options-container">
+                <p>Fahrenheit (°C)</p>
+                <img src="assets/images/icon-checkmark.svg" alt="">
+              </div>
+            </div>
+            <div class="line"></div>
+            <div class="wind-speed-in-switch-container">
+              <div class="wind-speed-in-switch">
+                <p class="names-of-units">Wind Speed</p>
+                <div class="kmh-in-switch options-container">
+                  <p>km/h</p>
+                  <img src="assets/images/icon-checkmark.svg" alt="">
+                </div>
+                <div class="mph-in-switch options-container">
+                  <p>mph</p>
+                  <img src="assets/images/icon-checkmark.svg" alt="">
+                </div>
+              </div>
+              <div class="line"></div>
+              <div class="precipitation-in-switch">
+                <p class="names-of-units">Precipitation</p>
+                <div class="millimeters-in-switch options-container">
+                  <p>Millimeters (mm)</p>
+                  <img src="assets/images/icon-checkmark.svg" alt="">
+                </div>
+                <div class="inches-in-switch options-container">
+                  <p>Inches (in)</p>
+                  <img src="assets/images/icon-checkmark.svg" alt="">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="container">
+      <section class="search-section">
+        <h1>How's the sky Looking today?</h1>
+        <div class="search-container">
+          <div tabindex="0" class="search-input">
+            <img src="assets/images/icon-search.svg" alt="">
+            <input type="text" placeholder="Search for a place...">
+
+            <div class="select-city-container">
+              <!-- <template data-city-template> -->
+              <ul>
+                <!-- <li>City Name</li>
+                  <li>City Name</li>
+                  <li>City Name</li>
+                  <li>City Name</li> -->
+              </ul>
+              <!-- </template> -->
+            </div>
+          </div>
+          <button class="search-btn">Search</button>
+        </div>
+      </section>
+
+      <!-- Temperature -->
+      <section class="temperature-section">
+        <div class="temperature-container">
+          <div>
+            <div class="temperature-display">
+              <div class="country-temperature">
+                <div class="weather-left">
+                  <h2 class="city">Berlin,Germany</h2>
+                  <p class="date">Tuesday,Aug 5,2025</p>
+                </div>
+
+                <div class="weather-right">
+                  <img class="weather-icon" src="assets/images/icon-sunny.webp" alt="">
+                  <h1 class="temp">68°</h1>
+                  <h1></h1>
+                </div>
+              </div>
+            </div>
+            <section class="weather-details">
+              <div class="details-container">
+                <div class="details-card">
+                  <p>
+                    Feels Like
+                  </p>
+                  <h3 class="feels-like ">64°</h3>
+                </div>
+
+                <div class="details-card">
+                  <p>Humidity</p>
+                  <h3 class="Humidity">46%</h3>
+                </div>
+
+                <div class="details-card">
+                  <p>
+                    Wind
+                  </p>
+                  <h3 class="wind">9mph</h3>
+                </div>
+                <div class="details-card">
+                  <p>
+                    Precipitation
+                  </p>
+                  <h3 class="precipitation">0 in</h3>
+                </div>
+              </div>
+            </section>
+            <!-- Daily forecast -->
+            <section class="daily-forecast-section">
+              <div class="weekly-forecast-details-container">
+                <h4>Daily Forecast</h4>
+                <div class="daily-forecast-details">
+                  <div class="day-forecast monday">
+                    <p>Mon</p>
+                    <img src="assets/images/icon-fog.webp" alt="">
+                    <div class="daily-forecast-temperature">
+                      <p>75°</p>
+                      <p>59°</p>
+                    </div>
+                  </div>
+
+                  <div class="day-forecast monday">
+                    <p>Mon</p>
+                    <img src="assets/images/icon-fog.webp" alt="">
+                    <div class="daily-forecast-temperature">
+                      <p>75°</p>
+                      <p>59°</p>
+                    </div>
+                  </div>
+                  <div class="day-forecast monday">
+                    <p>Mon</p>
+                    <img src="assets/images/icon-fog.webp" alt="">
+                    <div class="daily-forecast-temperature">
+                      <p>75°</p>
+                      <p>59°</p>
+                    </div>
+                  </div>
+                  <div class="day-forecast monday">
+                    <p>Mon</p>
+                    <img src="assets/images/icon-fog.webp" alt="">
+                    <div class="daily-forecast-temperature">
+                      <p>75°</p>
+                      <p>59°</p>
+                    </div>
+                  </div>
+                  <div class="day-forecast monday">
+                    <p>Mon</p>
+                    <img src="assets/images/icon-fog.webp" alt="">
+                    <div class="daily-forecast-temperature">
+                      <p>75°</p>
+                      <p>59°</p>
+                    </div>
+                  </div>
+                  <div class="day-forecast monday">
+                    <p>Mon</p>
+                    <img src="assets/images/icon-fog.webp" alt="">
+                    <div class="daily-forecast-temperature">
+                      <p>75°</p>
+                      <p>59°</p>
+                    </div>
+                  </div>
+                  <div class="day-forecast monday">
+                    <p>Mon</p>
+                    <img src="assets/images/icon-fog.webp" alt="">
+                    <div class="daily-forecast-temperature">
+                      <p>75°</p>
+                      <p>59°</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- Hourly forecast -->
+          <div>
+            <section class="hourly-section">
+              <div class="hourly-container">
+                <div class="hourly-forecast-head">
+                  <h4>Hourly forecast</h4>
+                  <div class="select-day">
+                    <p>Tuesday <span><img src="assets/images/icon-dropdown.svg" alt=""></span></p>
+                    <div class="week-day-select-container">
+                      <p>Monday</p>
+                      <p>Tuesday</p>
+                      <p>Wednesday</p>
+                      <p>Thursday</p>
+                      <p>Friday</p>
+                      <p>Saturday</p>
+                      <p>Sunday</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hourly-list">
+                  <div class="one-hour-forecast">
+                    <div class="time-container">
+                      <img src="assets/images/icon-overcast.webp" alt="">
+                      <p>3 PM</p>
+                    </div>
+                    <p>68°</p>
+                  </div>
+                  <div class="one-hour-forecast">
+                    <div class="time-container">
+                      <img src="assets/images/icon-overcast.webp" alt="">
+                      <p>3 PM</p>
+                    </div>
+                    <p>68°</p>
+                  </div>
+                  <div class="one-hour-forecast">
+                    <div class="time-container">
+                      <img src="assets/images/icon-overcast.webp" alt="">
+                      <p>3 PM</p>
+                    </div>
+                    <p>68°</p>
+                  </div>
+                  <div class="one-hour-forecast">
+                    <div class="time-container">
+                      <img src="assets/images/icon-overcast.webp" alt="">
+                      <p>3 PM</p>
+                    </div>
+                    <p>68°</p>
+                  </div>
+                  <div class="one-hour-forecast">
+                    <div class="time-container">
+                      <img src="assets/images/icon-overcast.webp" alt="">
+                      <p>3 PM</p>
+                    </div>
+                    <p>68°</p>
+                  </div>
+                  <div class="one-hour-forecast">
+                    <div class="time-container">
+                      <img src="assets/images/icon-overcast.webp" alt="">
+                      <p>3 PM</p>
+                    </div>
+                    <p>68°</p>
+                  </div>
+                  <div class="one-hour-forecast">
+                    <div class="time-container">
+                      <img src="assets/images/icon-overcast.webp" alt="">
+                      <p>3 PM</p>
+                    </div>
+                    <p>68°</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+
+    </div>
+  </main>
+  <!-- Switch to Imperial/Metric -->
+
+
+
+  <!-- Celsius (°C) -->
+  <!-- Fahrenheit (°F) -->
+
+  <!-- Wind Speed -->
+
+  <!-- km/h -->
+  <!-- mph -->
+
+  <!-- Precipitation -->
+
+  <!-- Millimeters (mm) -->
+  <!-- Inches (in) -->
+
+  <!-- How's the sky looking today? -->
+
+  <!-- Search for a city, e.g., New York -->
+  <!-- Search -->
+
+  <!-- Feels like -->
+  <!-- Insert temperature here -->
+
+  <!-- Humidity -->
+  <!-- Insert humidity here -->
+
+  <!-- Wind -->
+  <!-- Insert wind here -->
+
+  <!-- Precipitation -->
+  <!-- Insert precipitation here -->
+
+  <!-- Daily forecast -->
+  <!-- Insert daily forecast for the next 7 days here -->
+
+  <!-- Hourly forecast -->
+  <!-- Insert hourly forecast for the selected day here -->
+
+  </div>
+</body>
+
+</html>

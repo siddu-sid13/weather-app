@@ -1,0 +1,542 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+:root {
+    --primary-color: hsl(0, 0%, 100%);
+}
+
+body {
+    background-color: hsl(243, 96%, 9%);
+    color: var(--primary-color);
+    font-family: 'DM Sans';
+}
+
+.container {
+    padding-inline: 6rem;
+    max-width: 1500px;
+    margin-inline: auto;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.units-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 1rem;
+    border-radius: 8px;
+    background-color: hsl(243, 27%, 20%);
+    cursor: pointer;
+    position: relative;
+}
+
+.switch-container{
+    position: absolute;
+    width: 200px;
+    font-size: 15px;
+    top: 0px;
+    right: 0;
+    background-color: hsl(243, 27%, 20%);
+    z-index: 55;
+    padding: 12px;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0;
+}
+.switch-container img{
+    display: none;
+}
+
+.switch-container-active{
+    top: 55px;
+    opacity: 1;
+    transition: all 0.2s ease-in-out;
+    pointer-events: all;
+}
+
+
+.options-container{
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+}
+.options-container-active{
+    background-color: hsl(243, 23%, 24%);
+    border-radius: 5px;
+}
+.options-container-active img{
+    display: block;
+}
+.switched-name{
+    padding: 8px;
+
+}
+.names-of-units{
+    padding: 8px;
+    opacity: 0.7;
+    font-size: 14px;
+}
+.line{
+    border-top: 1px solid hsl(243, 23%, 30%);
+}
+.units-container:focus-within {
+    outline: 3px solid var(--primary-color);
+}
+
+/* Search for a place */
+.search-section {
+    margin-block: 3rem;
+}
+
+.search-section h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    font-family: 'Bricolage Grotesque';
+}
+
+.search-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    gap: 8px;
+}
+.select-city-container{
+    position: absolute;
+    background-color: hsl(243, 27%, 20%);
+    width: 100%;
+    left: 0;
+    top: 0px;
+    border-radius: 10px;
+    padding: 8px;
+    opacity: 0;
+    pointer-events: none;
+    
+}
+.select-city-container-active{
+    transition: all 100ms ease-in-out;
+    top: 60px;
+    opacity: 1;
+    pointer-events: all;
+    z-index: 100;
+}
+
+.select-city-container li{
+    list-style: none;
+    font-size: 14px;
+    padding: 10px;
+}
+.select-city-container li:hover{
+    cursor: pointer;
+    background-color: hsl(243, 23%, 24%);
+    border-radius: 10px;
+    outline:1px solid hsla(240, 6%, 70%, 0.271);
+}
+.select-city-container ul{
+    padding-left: 0;
+}
+
+.search-input {
+    max-width: 420px;
+    width: 100%;
+    background-color: hsl(243, 27%, 20%);
+    display: flex;
+    align-items: center;
+    padding: 8px 1rem;
+    border-radius: 8px;
+    position: relative;
+}
+
+.search-input img {
+    width: 1.12rem;
+}
+
+.search-input input {
+    width: 100%;
+    height: 30px;
+    margin-left: 10px;
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+    border: none;
+    font-size: 14px;
+    outline: none;
+}
+
+.search-input:focus-within {
+    outline: 3px solid var(--primary-color);
+}
+
+.search-input input::placeholder {
+    color: inherit;
+    opacity: .7;
+}
+
+.search-btn {
+    background-color: hsl(233, 67%, 56%);
+    color: inherit;
+    border: none;
+    width: 80px;
+    border-radius: 8px;
+    cursor: pointer;
+    outline: none;
+}
+
+.search-btn:focus {
+    outline: 3px solid hsl(248, 70%, 36%);
+    border: 3px solid hsl(243, 96%, 9%);
+}
+
+/* Temperature section */
+.temperature-container {
+    display: grid;
+    grid-template-columns: 65% 35%;
+    gap: 20px;
+    align-items: stretch;
+}
+
+.temperature-container>div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.hourly-container {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-between; */
+    background-color: hsl(243, 27%, 20%);
+    padding: 1.5rem;
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    height: 100%;
+    min-height: 0;
+}
+.hourly-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: scroll;
+    flex: 1; /* 🔥 takes remaining height */
+    min-height: 0;
+}
+.hourly-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.hourly-list::-webkit-scrollbar-thumb {
+  background: red;
+  border-radius: 10px;
+}
+
+.country-temperature {
+    background-image: url('assets/images/bg-today-large.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.weather-right {
+    display: flex;
+    align-items: center;
+}
+
+.weather-icon {
+    width: 80px;
+    height: 80px;
+}
+
+.temp {
+    font-size: 4rem;
+    font-style: italic;
+    margin-left: 1rem;
+}
+
+.details-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.details-card {
+    background-color: hsl(243, 27%, 20%);
+    margin-top: 1rem;
+    padding: 1.2rem;
+    width: 100%;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid hsl(243, 23%, 30%);
+}
+
+.details-card p {
+    opacity: .7;
+    font-weight: 300;
+    font-size: 15px;
+}
+
+.details-card h3 {
+    font-weight: 200;
+    opacity: 1;
+    font-size: 2rem;
+}
+
+.weekly-forecast-details-container {
+    margin-top: 45px;
+}
+
+.daily-forecast-details {
+    margin-top: 8px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+}
+
+.day-forecast {
+    background-color: hsl(243, 27%, 20%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    padding: 11px;
+    border-radius: 6px;
+    border: 1px solid hsl(243, 23%, 30%);
+}
+
+.daily-forecast-temperature {
+    display: flex;
+    justify-content: space-between;
+    align-self: normal;
+}
+
+.day-forecast img {
+    width: 70px;
+}
+.temperature-container > div {
+    height: 100%;
+    min-width: 0;
+}
+
+/* Hourly Forecast */
+/* .hourly-container {
+    max-width: 100%px;
+    width: 100%;
+    background-color: hsl(243, 27%, 20%);
+    padding: 1.5rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+} */
+
+.hourly-forecast-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hourly-forecast-head h4 {
+    font-size: 20px;
+}
+.select-day{
+    position: relative;
+}
+.select-day > p{
+    background-color: hsl(243, 23%, 30%);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.week-day-select-container{
+    position: absolute;
+    background-color: hsl(243, 27%, 20%);
+    right: 0;
+    top: 0px;
+    opacity: 0;
+    pointer-events: none;
+    width: 180px;
+    border-radius: 10px;
+    border: 2px solid hsl(243, 23%, 30%);
+    padding: 8px;
+}
+.week-day-select-container-active{
+    opacity: 1;
+    pointer-events: all;
+    top: 40px;
+    transition: all 0.2s ease-in-out;
+}
+.week-day-select-container p{
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.week-day-select-container p:hover{
+    background-color: hsl(243, 23%, 24%);
+}
+
+.one-hour-forecast {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: hsl(243, 23%, 24%);
+    border-radius: 8px;
+    padding: 8px 10px;
+    border: 2px solid hsl(243, 23%, 30%);
+}
+
+.one-hour-forecast img {
+    width: 40px;
+}
+
+.time-container {
+    display: flex;
+    align-items: center;
+}
+
+.time-container img {
+    margin-right: 9px;
+}
+
+@media (max-width: 500px) {
+    .title img {
+        width: 9rem;
+    }
+    .country-temperature{
+        flex-direction: column;
+        padding: 1rem;
+    }
+    .units-container {
+        padding: 7px .5rem;
+        gap: 5px;
+    }
+
+    .units-container img {
+        font-size: .8rem;
+    }
+
+    .search-section {
+        margin-block: 2rem;
+    }
+
+    .search-section h1 {
+        margin-bottom: 2rem;
+    }
+
+    .search-container {
+        flex-direction: column;
+    }
+
+    .search-input {
+        max-width: 500px;
+        width: 100%;
+    }
+
+    .search-btn {
+        width: 100%;
+        height: 40px;
+    }
+}
+
+@media (max-width: 700px) {
+    .container {
+        padding-inline: 1rem;
+    }
+    .temperature-container{
+        grid-template-columns: 1fr;
+    }
+
+    /* .title img {
+        width: 11rem;
+    } */
+
+    .units-container {
+        padding: 9px .7rem;
+        gap: 5px;
+
+    }
+
+    .units-container img {
+        width: 1rem;
+    }
+
+    .units-container span {
+        font-size: 0.8rem;
+    }
+
+    .search-section h1 {
+        font-size: 2rem;
+    }
+    .country-temperature {
+        background-image: url('assets/images/bg-today-small.svg');
+    }
+}
+@media (min-width: 700px) and (max-width: 950px){
+    /* .country-temperature {
+        background-image: url('assets/images/bg-today-small.svg');
+    } */
+}
+
+@media (max-width: 950px) {
+    .details-card p {
+        font-size: 13px;
+    }
+
+    .details-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .daily-forecast-details p {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 850px) {
+
+    .temperature-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1171px) {
+    .daily-forecast-details {
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    }
+
+    .weather-details .details-container {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+
+    .hourly-forecast-head h4 {
+        font-size: 16px;
+    }
+
+    .select-day p{
+        font-size: 12px;
+    }
+    .select-day > p{
+        padding: 10px 10px;
+    }
+}
