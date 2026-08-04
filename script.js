@@ -353,27 +353,28 @@ const precipitation = document.querySelector(".precipitation");
 const selectCityContainer = document.querySelector(".select-city-container");
 const allCitiesContainer = document.querySelector(".select-city-container ul");
 
+let cityInfo = null;
 
 searchInput.addEventListener("input",async ()=>{
+    cityInfo = null;
     const cityName = searchInput.value.trim();
     const res = await getCities(cityName)
     showingCities(cityName,res);
-    // console.log(res)
 })
-allCitiesContainer.addEventListener('click', async (e) => {
+allCitiesContainer.addEventListener('click',  (e) => {
     if (!selectCityContainer.contains(e.target)) {
         selectCityContainer.classList.remove('select-city-container-active');
     }
     else {
         if (e.target.tagName === "LI") {
             searchInput.value = e.target.innerText;
-
-            // const weatherData = await getWeatherByCity(searchInput.value);
-            place.innerText = e.target.dataset.city;
-            const lat = e.target.dataset.latitude;
-            const long = e.target.dataset.longitude;
-            const weatherData = await loadWeatherByCoordinates(searchInput.value,lat,long)
-            updateCurrentWeather(weatherData);
+            
+            cityInfo = {
+                city : e.target.dataset.city,
+                lat : e.target.dataset.latitude,
+                long : e.target.dataset.longitude
+            }
+            
             // console.log(weatherData)
             // allWeatherData = weatherData;
             // insertingWeatherData(weatherData)
@@ -388,7 +389,8 @@ allCitiesContainer.addEventListener('click', async (e) => {
     }
 })
 
-async function loadWeatherByCoordinates(inputCity,lat,long){
+
+async function loadWeatherByCoordinates(lat,long){
     const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation,apparent_temperature,weathercode&hourly=temperature_2m,precipitation,weathercode&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm`)
     const weatherData = await weatherRes.json();
     return weatherData;
@@ -441,8 +443,12 @@ async function getCities(city){
     return data.results;
 }
 
-searchBtn.addEventListener("click",()=>{
-    console.log(cityName)
+searchBtn.addEventListener("click",async ()=>{
+    if(cityInfo){
+        place.innerText = cityInfo.city;
+        const weatherData = await loadWeatherByCoordinates(cityInfo.lat,cityInfo.long)
+        updateCurrentWeather(weatherData);
+    }
 })
 
 
