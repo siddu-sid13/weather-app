@@ -166,7 +166,7 @@
 
 //     const container = document.querySelector(".hourly-list");
 //     container.innerHTML = "";
-    
+
 
 
 //     const now = new Date();
@@ -275,7 +275,7 @@
 //     })
 //     document.querySelector(".select-day p").innerHTML = `<p>${firstDay} <span><img src="assets/images/icon-dropdown.svg" alt=""></span></p>`;
 //     weekDayContainer.innerHTML = "";
-    
+
 //     times.forEach((time,i) =>{
 //     const dayName = new Date(time).toLocaleDateString("en-IN",{
 //         weekday: "long"
@@ -298,12 +298,12 @@
 //     const container = document.querySelector(".hourly-list");
 //     container.innerHTML = "";
 
-    
+
 //     const filteredIndexes = times
 //         .map((time, i) => time.startsWith(selectedDate) ? i : -1)
 //         .filter(i => i !== -1);
 
-    
+
 //     filteredIndexes.slice(0, 7).forEach(i => {
 
 //         const hour = new Date(times[i]).toLocaleTimeString("en-IN", {
@@ -353,28 +353,33 @@ const precipitation = document.querySelector(".precipitation");
 const selectCityContainer = document.querySelector(".select-city-container");
 const allCitiesContainer = document.querySelector(".select-city-container ul");
 
+
+const hourlyContainer = document.querySelector(".hourly-list");
+
+const dailyForecastContainer = document.querySelector(".daily-forecast-details");
+
 let cityInfo = null;
 
-searchInput.addEventListener("input",async ()=>{
+searchInput.addEventListener("input", async () => {
     cityInfo = null;
     const cityName = searchInput.value.trim();
     const res = await getCities(cityName)
-    showingCities(cityName,res);
+    showingCities(cityName, res);
 })
-allCitiesContainer.addEventListener('click',  (e) => {
+allCitiesContainer.addEventListener('click', (e) => {
     if (!selectCityContainer.contains(e.target)) {
         selectCityContainer.classList.remove('select-city-container-active');
     }
     else {
         if (e.target.tagName === "LI") {
             searchInput.value = e.target.innerText;
-            
+
             cityInfo = {
-                city : e.target.dataset.city,
-                lat : e.target.dataset.latitude,
-                long : e.target.dataset.longitude
+                city: e.target.dataset.city,
+                lat: e.target.dataset.latitude,
+                long: e.target.dataset.longitude
             }
-            
+
             // console.log(weatherData)
             // allWeatherData = weatherData;
             // insertingWeatherData(weatherData)
@@ -390,39 +395,38 @@ allCitiesContainer.addEventListener('click',  (e) => {
 })
 
 
-async function loadWeatherByCoordinates(lat,long){
+async function loadWeatherByCoordinates(lat, long) {
     const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation,apparent_temperature,weathercode&hourly=temperature_2m,precipitation,weathercode&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm`)
     const weatherData = await weatherRes.json();
     return weatherData;
 }
-function updateCurrentWeather(weatherData){
+function updateCurrentWeather(weatherData) {
     const dateTime = weatherData.current.time;
     const currentTime = new Date(dateTime);
-    
-    const fullDate = currentTime.toLocaleDateString("en-IN",{
+
+    const fullDate = currentTime.toLocaleDateString("en-IN", {
         weekday: "long",
         month: "long",
         day: "numeric",
         year: "numeric"
     })
-    
+
     date.innerText = fullDate;
-    console.log(weatherData)
     temp.innerText = `${weatherData.current.temperature_2m}°`
     feelsLike.innerText = weatherData.current.apparent_temperature + weatherData.current_units.temperature_2m;
     humidity.innerText = weatherData.current.relative_humidity_2m + weatherData.current_units.relative_humidity_2m;
-    wind.innerText = weatherData.current.wind_speed_10m +" "+ weatherData.current_units.wind_speed_10m;
-    precipitation.innerText = weatherData.current.precipitation +" "+ weatherData.current_units.precipitation;
+    wind.innerText = weatherData.current.wind_speed_10m + " " + weatherData.current_units.wind_speed_10m;
+    precipitation.innerText = weatherData.current.precipitation + " " + weatherData.current_units.precipitation;
 
 }
 
-function showingCities(city,allCities){
-    if(city.length<= 1) return;
-    allCitiesContainer.innerHTML ="";
-    if(city.length >= 3){
+function showingCities(city, allCities) {
+    if (city.length <= 1) return;
+    allCitiesContainer.innerHTML = "";
+    if (city.length >= 3) {
         selectCityContainer.classList.add('select-city-container-active');
-        if(allCities){
-            allCities.forEach(city=>{
+        if (allCities) {
+            allCities.forEach(city => {
                 const li = document.createElement("li");
                 li.innerText = `${city.name}, ${city.admin1}, ${city.country}`;
                 li.dataset.latitude = city.latitude;
@@ -431,25 +435,161 @@ function showingCities(city,allCities){
                 allCitiesContainer.append(li);
             })
         }
-        
+
     }
-    else{
+    else {
         selectCityContainer.classList.remove('select-city-container-active');
     }
 }
-async function getCities(city){
+async function getCities(city) {
     const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}`)
     const data = await res.json();
     return data.results;
 }
 
-searchBtn.addEventListener("click",async ()=>{
-    if(cityInfo){
+searchBtn.addEventListener("click", async () => {
+    if (cityInfo) {
         place.innerText = cityInfo.city;
-        const weatherData = await loadWeatherByCoordinates(cityInfo.lat,cityInfo.long)
+        const weatherData = await loadWeatherByCoordinates(cityInfo.lat, cityInfo.long)
         updateCurrentWeather(weatherData);
+        updateHourlyForeCast(weatherData)
+        updateDailyForecast(weatherData);
+        console.log(weatherData)
     }
 })
 
+// hourly forecast 
+function getWeatherIcon(code) {
+    if (code === 0) {
+        return `assets/images/icon-sunny.webp`
+    }
+    else if (code === 1 || code === 2) {
+        return `assets/images/icon-partly-cloudy.webp`;
+    }
+    else if (code === 3) {
+        return `assets/images/icon-overcast.webp`;
+    }
+    else if (code >= 45 && code <= 48) {
+        return `assets/images/icon-fog.webp`;
+    }
+    else if (code >= 51 && code <= 57) {
+        return `assets/images/icon-drizzle.webp`;
+    }
+    else if (code >= 61 && code <= 67) {
+        return `assets/images/icon-rain.webp`;
+    }
+    else if (code >= 71 && code <= 77) {
+        return `assets/images/icon-snow.webp`;
+    }
+    else if (code >= 80 && code <= 82) {
+        return `assets/images/icon-rain.webp`;
+    }
+    else if (code >= 85 && code <= 86) {
+        return `assets/images/icon-snow.webp`;
+    }
+    else {
+        if (code >= 95 && code <= 99)
+            return `assets/images/icon-storm.webp`;
+    }
+    return `assets/images/icon-sunny.webp`
+}
+function updateHourlyForeCast(data) {
+
+    const hourly = data.hourly;
+    const times = hourly.time;
+    const temps = hourly.temperature_2m;
+    const weatherCodes = hourly.weathercode;
+    const now = new Date();
+
+    hourlyContainer.innerHTML = "";
+    const options = {
+        hour: "numeric",
+        hour12: true
+    }
+
+    const startIndex = times.findIndex(time => new Date(time) >= now)
+    times.slice(startIndex, startIndex + 7).forEach((time, i) => {
+        const index = startIndex + i;
+
+        const hourForecastContainer = document.createElement('div');
+        hourForecastContainer.classList.add('one-hour-forecast')
+        hourForecastContainer.innerHTML = `
+        <div class="time-container">
+            <img src="${getWeatherIcon(weatherCodes[index])}" alt="">
+            <p>${new Date(time).toLocaleString("en-IN", options).toUpperCase()}</p>
+        </div>
+        <p>${temps[index]}°</p>`;
+        hourlyContainer.append(hourForecastContainer);
+    })
+}
+
+
+// Daily forecast
+function updateDailyForecast(data) {
+    const dailyData = data.daily;
+    const max = dailyData.temperature_2m_max;
+    const min = dailyData.temperature_2m_min;
+
+    const dates = dailyData.time;
+    const weatherCode = dailyData.weathercode;
+
+    dailyForecastContainer.innerHTML = "";
+    dates.forEach((date, index) => {
+        const day = new Date(date).toLocaleDateString("en-IN", {
+            weekday: "short"
+        });
+        const maxTemp = max[index];
+        const minTemp = min[index];
+        const icon = getWeatherIcon(weatherCode[index]);
+
+        const card = document.createElement("div");
+        card.classList.add("day-forecast");
+        card.innerHTML = `
+            <p>${day}</p>
+            <img src="${icon}" alt="">
+            <div class="daily-forecast-temperature">
+                <p>${maxTemp}°</p>
+                <p>${minTemp}°</p>
+            </div>`;
+        dailyForecastContainer.append(card);
+
+    })
+
+}
+// async function details() {
+//     const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${17.38405}&longitude=${78.45636}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation,apparent_temperature,weathercode&hourly=temperature_2m,precipitation,weathercode&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm`)
+//     const data = await res.json();
+
+//     console.log(data)
+// }
+// details();
+// function insertingDailyForecast(data) {
+//     const daily = data.daily;
+//     const dates = daily.time;
+//     const maxTemps = daily.temperature_2m_max;
+//     const minTemps = daily.temperature_2m_min;
+//     // debugger
+
+
+//     const container = document.querySelector(".daily-forecast-details");
+//     container.innerHTML = "";
+//     dates.forEach((date, index) => {
+//         const day = new Date(date).toLocaleDateString("en-US", {
+//             weekday: "short"
+//         });
+//         const max = maxTemps[index];
+//         const min = minTemps[index];
+//         const icon = getWeatherIcon(daily.weathercode[index]);
+//         const card = document.createElement("div");
+//         card.classList.add("day-forecast");
+//         card.innerHTML = `<p>${day}</p>
+//                     <img src= ${icon} alt="">
+//                     <div class="daily-forecast-temperature">
+//                       <p>${max}°</p>
+//                       <p>${min}°</p>
+//                     </div>`;
+
+//         container.appendChild(card);
+//     })
 
 
