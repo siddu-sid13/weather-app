@@ -358,6 +358,11 @@ const hourlyContainer = document.querySelector(".hourly-list");
 
 const dailyForecastContainer = document.querySelector(".daily-forecast-details");
 
+const selectDayContainer = document.querySelector(".select-day");
+const weekDaySelectContainer = document.querySelector(".week-day-select-container")
+const allDays = weekDaySelectContainer.querySelectorAll("p")
+console.log(allDays)
+
 let cityInfo = null;
 
 searchInput.addEventListener("input", async () => {
@@ -379,14 +384,6 @@ allCitiesContainer.addEventListener('click', (e) => {
                 lat: e.target.dataset.latitude,
                 long: e.target.dataset.longitude
             }
-
-            // console.log(weatherData)
-            // allWeatherData = weatherData;
-            // insertingWeatherData(weatherData)
-            // insertingDailyForecast(weatherData);
-            // insertingHourlyForecast(weatherData);
-            // insertingWeekdays(weatherData);
-            // console.log(weatherData);
 
 
             selectCityContainer.classList.remove('select-city-container-active');
@@ -446,15 +443,21 @@ async function getCities(city) {
     const data = await res.json();
     return data.results;
 }
-
+let data = null;
 searchBtn.addEventListener("click", async () => {
     if (cityInfo) {
         place.innerText = cityInfo.city;
-        const weatherData = await loadWeatherByCoordinates(cityInfo.lat, cityInfo.long)
+        const weatherData = await loadWeatherByCoordinates(cityInfo.lat, cityInfo.long);
+        data = weatherData;
         updateCurrentWeather(weatherData);
         updateHourlyForeCast(weatherData)
         updateDailyForecast(weatherData);
+        
+        // debugger
         console.log(weatherData)
+        renderSelectedDay(weatherData.daily.time,0);
+        
+        
     }
 })
 
@@ -544,6 +547,7 @@ function updateDailyForecast(data) {
 
         const card = document.createElement("div");
         card.classList.add("day-forecast");
+        card.dataset.dayIndex = index;
         card.innerHTML = `
             <p>${day}</p>
             <img src="${icon}" alt="">
@@ -552,44 +556,83 @@ function updateDailyForecast(data) {
                 <p>${minTemp}°</p>
             </div>`;
         dailyForecastContainer.append(card);
-
     })
-
 }
-// async function details() {
-//     const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${17.38405}&longitude=${78.45636}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation,apparent_temperature,weathercode&hourly=temperature_2m,precipitation,weathercode&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm`)
-//     const data = await res.json();
-
-//     console.log(data)
-// }
-// details();
-// function insertingDailyForecast(data) {
-//     const daily = data.daily;
-//     const dates = daily.time;
-//     const maxTemps = daily.temperature_2m_max;
-//     const minTemps = daily.temperature_2m_min;
-//     // debugger
 
 
-//     const container = document.querySelector(".daily-forecast-details");
-//     container.innerHTML = "";
-//     dates.forEach((date, index) => {
-//         const day = new Date(date).toLocaleDateString("en-US", {
-//             weekday: "short"
-//         });
-//         const max = maxTemps[index];
-//         const min = minTemps[index];
-//         const icon = getWeatherIcon(daily.weathercode[index]);
-//         const card = document.createElement("div");
-//         card.classList.add("day-forecast");
-//         card.innerHTML = `<p>${day}</p>
-//                     <img src= ${icon} alt="">
-//                     <div class="daily-forecast-temperature">
-//                       <p>${max}°</p>
-//                       <p>${min}°</p>
-//                     </div>`;
+// week day select
+document.addEventListener("DOMContentLoaded", (e) => {
+     allDays.forEach((p, index) => {
+  
+        p.addEventListener("click", (e) => {
+            e.stopPropagation();
+            if (!data) return;
 
-//         container.appendChild(card);
-//     })
+            renderSelectedDay(data.daily.time, index);
+            updateSelectedDayHoursTemperature(data, index);
+
+            weekDaySelectContainer.classList.remove("week-day-select-container-active");
+
+        });
+
+    });
+
+
+    selectDayContainer.addEventListener("click",()=>{
+        weekDaySelectContainer.classList.toggle("week-day-select-container-active");
+        if (!data) return;
+        allDays.forEach((p, index) => {
+            p.innerText = new Date(data.daily.time[index]).toLocaleString(
+                "en-IN",
+                {
+                    weekday: "long"
+                }
+            );
+            p.dataset.dayIndex = index;
+        });
+    })
+    
+    
+})
+function updateSelectedDayHoursTemperature(data,index){
+    if(index === 0) {
+        updateHourlyForeCast(data);
+        return;
+    }
+    const selectedDate = data.daily.time[index];
+    const hourlyData = data.hourly;
+    const times = hourlyData.time;
+    const temps = hourlyData.temperature_2m;
+    const codes = hourlyData.weathercode;
+    hourlyContainer.innerHTML = "";
+        const filteredIndexes = times
+        .map((time, i) => time.startsWith(selectedDate) ? i : -1)
+        .filter(i => i !== -1);
+    filteredIndexes.slice(0,7).forEach(i =>{
+        const hour = new Date(times[i]).toLocaleString("en-IN",{
+            hour: "numeric",
+            hour12:true
+        })
+        const hourForecastContainer = document.createElement('div');
+        hourForecastContainer.classList.add('one-hour-forecast')
+        hourForecastContainer.innerHTML = `
+        <div class="time-container">
+            <img src="${getWeatherIcon(codes[i])}" alt="">
+            <p>${new Date(times[i]).toLocaleString("en-IN", {hour: "numeric",
+        hour12: true}).toUpperCase()}</p>
+        </div>
+        <p>${temps[i]}°</p>`;
+        hourlyContainer.append(hourForecastContainer);
+    })
+}
+
+
+
+function renderSelectedDay(days,currentIndex){
+    const today = selectDayContainer.querySelector("p");
+    const currentDay = new Date(days[currentIndex]).toLocaleString("en-IN",{weekday : "long"});
+    today.dataset.dayIndex = currentIndex;
+    today.innerHTML = `${currentDay} <span><img src="assets/images/icon-dropdown.svg" alt=""></span>`
+}
 
 
