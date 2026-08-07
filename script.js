@@ -28,14 +28,36 @@ const switchContainer = document.querySelector(".switch-container");
 const unitsContainer = document.querySelector(".units-container");
 const switchName = document.querySelector(".switched-name");
 
+const errorMsg = document.querySelector(".error-message")
+
 let cityInfo = null;
 
 searchInput.addEventListener("input", async () => {
     cityInfo = null;
     const cityName = searchInput.value.trim();
+    if (cityName.length < 3) {
+    selectCityContainer.classList.remove("select-city-container-active");
+    return;
+}
+    showSearchInProgress(cityName);
     const res = await getCities(cityName)
+    // selectCityContainer.classList.remove('select-city-container-active');
+    hideError();
+    console.log(allCitiesContainer.innerHTML)
     showingCities(cityName, res);
 })
+function showSearchInProgress(cityName){
+    const li = document.createElement('li');
+    li.innerHTML = `
+    <img id="search-in-progress-img" src="assets/images/icon-loading.svg" alt="">Search in progress
+    `;
+    li.classList.add("search-in-progress");
+    allCitiesContainer.innerHTML = "";
+
+        selectCityContainer.classList.add('select-city-container-active');
+        allCitiesContainer.append(li);
+
+}
 allCitiesContainer.addEventListener('click', (e) => {
     if (!selectCityContainer.contains(e.target)) {
         selectCityContainer.classList.remove('select-city-container-active');
@@ -49,8 +71,8 @@ allCitiesContainer.addEventListener('click', (e) => {
                 lat: e.target.dataset.latitude,
                 long: e.target.dataset.longitude
             }
-
-
+            hideError();
+            searchInput.parentElement.classList.remove("search-input-error");
             selectCityContainer.classList.remove('select-city-container-active');
         }
     }
@@ -88,9 +110,15 @@ function updateCurrentWeather(weatherData) {
 }
 
 function showingCities(city, allCities) {
+
+
     if (city.length <= 1) return;
     allCitiesContainer.innerHTML = "";
-    if (city.length >= 3) {
+        if(!allCities){
+            selectCityContainer.classList.remove("select-city-container-active");
+            showError("No result Found!");
+            return;
+        }
         selectCityContainer.classList.add('select-city-container-active');
         if (allCities) {
             allCities.forEach(city => {
@@ -101,8 +129,6 @@ function showingCities(city, allCities) {
                 li.dataset.city = city.name;
                 allCitiesContainer.append(li);
             })
-        }
-
     }
     else {
         selectCityContainer.classList.remove('select-city-container-active');
@@ -118,6 +144,10 @@ searchBtn.addEventListener("click", async () => {
     if (cityInfo) {
         place.innerText = cityInfo.city;
         await refreshWeather();
+    }else{
+        selectCityContainer.classList.remove("select-city-container-active");
+        showError("Please select a city from the suggestions.")
+        searchInput.parentElement.classList.add("search-input-error");
     }
 })
 async function refreshWeather(){
@@ -127,7 +157,6 @@ async function refreshWeather(){
     updateCurrentWeather(weatherData);
     updateHourlyForeCast(weatherData)
     updateDailyForecast(weatherData);
-    
     renderSelectedDay(weatherData.daily.time,0);
 }
 
@@ -350,3 +379,12 @@ document.addEventListener("DOMContentLoaded",(e) =>{
 })
 
 
+// Error-handling
+
+function showError(message){
+    errorMsg.innerText = message;
+    errorMsg.classList.add("error-message-active");
+}
+function hideError(){
+    errorMsg.classList.remove("error-message-active");
+}
